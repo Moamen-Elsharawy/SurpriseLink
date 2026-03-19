@@ -14,7 +14,8 @@
     "copied": "تم النسخ!",
     "tryItNow": "جربها الآن",
     "ar": "العربية",
-    "en": "English"
+    "en": "English",
+    "senderNameHint": "هذا الاسم هو الذي سيظهر للشخص المستلم للمفاجأة"
   },
   "create": {
     "title": "أنشئ رابط مفاجأة",
@@ -65,5 +66,11 @@
     "valentine": "عيد الحب",
     "women_day": "يوم المرأة",
     "teacher_day": "عيد المعلم"
+  },
+  "errors": {
+    "nameRequired": "يرجى إدخال اسم صحيح (حرفين على الأقل)",
+    "phoneInvalid": "رقم الهاتف غير صحيح",
+    "occasionRequired": "يرجى اختيار المناسبة",
+    "messagesRequired": "يجب إدخال الرسالة باللغتين العربية والإنجليزية"
   }
 }

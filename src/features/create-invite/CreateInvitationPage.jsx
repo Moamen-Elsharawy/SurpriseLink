@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { Copy, Check, Send, Sparkles, AlertCircle, MessageCircle } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import { PhoneInputCustom } from '../../components/ui/PhoneInputCustom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '../../lib/supabase';
 import messages from '../../lib/messages.json';
@@ -17,6 +18,7 @@ import Footer from '../../components/layout/Footer';
 import { WhatsAppIcon } from '../../components/ui/WhatsAppIcon';
 import SurpriseActionButtons from '../../components/layout/SurpriseActionButtons';
 import SEO from '../../components/shared/SEO';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/Select';
 
 const occasions = [
   'ramadan', 'eid_fitr', 'eid_adha', 'mawlid', 'islamic_new_year',
@@ -27,13 +29,14 @@ const occasions = [
 ];
 
 const CreateInvitationPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [inviteId, setInviteId] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
+  const { register, handleSubmit, formState: { errors }, watch, setValue, control } = useForm({
     resolver: zodResolver(invitationSchema),
     defaultValues: { senderName: '', senderPhone: '', occasion: '', isCustom: false, useSuggested: true, messageAr: '', messageEn: '' }
   });
@@ -45,7 +48,7 @@ const CreateInvitationPage = () => {
     setLoading(true);
     try {
       const id = uuidv4();
-      
+
       let finalMsg = { ar: data.messageAr, en: data.messageEn };
 
       if (!data.isCustom) {
@@ -95,8 +98,8 @@ const CreateInvitationPage = () => {
 
   return (
     <div className={`min-h-full flex-1 flex flex-col ${success ? 'max-w-5xl' : 'max-w-3xl'} md:mx-auto py-4 md:py-8 px-0 md:px-4 transition-all duration-500`}>
-      <SEO 
-        title={t('create.title')} 
+      <SEO
+        title={t('create.title')}
         description={t('create.subtitle')}
       />
       <AnimatePresence mode="wait">
@@ -108,65 +111,82 @@ const CreateInvitationPage = () => {
             exit={{ opacity: 0, scale: 0.95 }}
             className="glass-card space-y-6 md:space-y-8"
           >
-              <div className="text-center space-y-2">
-                <h1 className="text-4xl font-black text-foreground drop-shadow-sm">
-                  {t('create.title')}
-                </h1>
-                <p className="text-foreground/60">{t('create.subtitle')}</p>
-              </div>
+            <div className="text-center space-y-2">
+              <h1 className="text-4xl font-black text-foreground drop-shadow-sm">
+                {t('create.title')}
+              </h1>
+              <p className="text-foreground/60">{t('create.subtitle')}</p>
+            </div>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="senderName">{t('common.senderName')}</Label>
-                  <Input
-                    id="senderName"
-                    placeholder="John Doe"
-                    {...register('senderName')}
-                    className={errors.senderName ? 'border-red-500/50' : ''}
-                  />
-                  {errors.senderName && (
-                    <p className="text-xs text-red-500 flex items-center gap-1 font-medium">
-                      <AlertCircle size={12} /> {errors.senderName.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="senderPhone">{t('common.phoneNumber')}</Label>
-                  <Input
-                    id="senderPhone"
-                    placeholder="+201234567890"
-                    type="tel"
-                    {...register('senderPhone')}
-                    className={errors.senderPhone ? 'border-red-500/50' : ''}
-                  />
-                  {errors.senderPhone && (
-                    <p className="text-xs text-red-500 flex items-center gap-1 font-medium">
-                      <AlertCircle size={12} /> {errors.senderPhone.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="occasion">{t('common.occasion')}</Label>
-                  <select
-                    id="occasion"
-                    className={`w-full h-12 px-4 rounded-2xl bg-background/50 border border-foreground/10 ring-offset-background focus-visible:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 text-foreground appearance-none cursor-pointer ${errors.occasion ? 'border-red-500/50' : ''}`}
-                    {...register('occasion')}
-                  >
-                    <option value="" disabled className="bg-background text-foreground">{t('common.occasion')}</option>
-                    {occasions.map((occ) => (
-                      <option key={occ} value={occ} className="bg-background text-foreground">
-                        {t(`occasions.${occ}`)}
-                      </option>
-                    ))}
-                  </select>
-                {errors.occasion && (
-                  <p className="text-xs text-red-400 flex items-center gap-1">
-                    <AlertCircle size={12} /> {errors.occasion.message}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="senderName">{t('common.senderName')}</Label>
+                <Input
+                  id="senderName"
+                  placeholder="John Doe"
+                  {...register('senderName')}
+                  className={errors.senderName ? 'border-red-500/50' : ''}
+                />
+                {!errors.senderName && (
+                  <p className="text-[10px] md:text-xs text-foreground/40 text-start px-1 italic">
+                    {t('common.senderNameHint')}
+                  </p>
+                )}
+                {errors.senderName && (
+                  <p className="text-xs text-red-500 flex items-center gap-1 font-medium text-start">
+                    <AlertCircle size={12} /> {t(errors.senderName.message)}
                   </p>
                 )}
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="senderPhone">{t('common.phoneNumber')}</Label>
+                <Controller
+                  name="senderPhone"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInputCustom
+                      {...field}
+                      placeholder={t('common.phoneNumber')}
+                      defaultCountry="EG"
+                      international
+                      error={errors.senderPhone}
+                    />
+                  )}
+                />
+                {errors.senderPhone && (
+                  <p className="text-xs text-red-500 flex items-center gap-1 font-medium text-start">
+                    <AlertCircle size={12} /> {t(errors.senderPhone.message)}
+                  </p>
+                )}
+              </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="occasion">{t('common.occasion')}</Label>
+                  <Controller
+                    name="occasion"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value || ""}>
+                        <SelectTrigger className={`w-full h-12 px-4 rounded-2xl bg-background/50 border border-foreground/10 ring-offset-background focus-visible:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 text-foreground appearance-none cursor-pointer ${errors.occasion ? 'border-red-500/50' : ''}`}>
+                          <SelectValue className="text-start" dir={isEn ? "ltr" : "rtl"} placeholder={t('common.occasion')} />
+                        </SelectTrigger>
+                        <SelectContent className="z-[100]" dir={isEn ? "ltr" : "rtl"}>
+                          {occasions.map((occ) => (
+                            <SelectItem key={occ} value={occ} className="text-start">
+                              {t(`occasions.${occ}`)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.occasion && (
+                    <p className="text-xs text-red-500 flex items-center gap-1 text-start">
+                      <AlertCircle size={12} /> {t(errors.occasion.message)}
+                    </p>
+                  )}
+                </div>
 
               {/* Message Choice Selection */}
               <div className="flex flex-col gap-3 p-5 rounded-3xl bg-background/30 border border-foreground/10 shadow-sm">
@@ -174,52 +194,52 @@ const CreateInvitationPage = () => {
                   <MessageCircle size={18} />
                   <span>{t('create.messageStyle')}</span>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* use suggested message toggle */}
-                  <div 
+                  <div
                     className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-2 ${!isCustom && useSuggested ? 'border-primary bg-primary/5 ring-4 ring-primary/10' : 'border-foreground/10 bg-background/20 hover:border-primary/30'}`}
                     onClick={() => {
-                        setValue('isCustom', false);
-                        setValue('useSuggested', true);
+                      setValue('isCustom', false);
+                      setValue('useSuggested', true);
                     }}
                   >
                     <div className="font-bold flex items-center justify-between gap-4">
-                        <span className="text-sm md:text-base">{t('create.suggestedMessage')}</span>
-                        <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${!isCustom && useSuggested ? 'border-primary' : 'border-foreground/20'}`}>
-                            {!isCustom && useSuggested && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                        </div>
+                      <span className="text-sm md:text-base">{t('create.suggestedMessage')}</span>
+                      <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${!isCustom && useSuggested ? 'border-primary' : 'border-foreground/20'}`}>
+                        {!isCustom && useSuggested && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                      </div>
                     </div>
                     <p className="text-xs text-foreground/50 leading-relaxed">{t('create.suggestedDesc')}</p>
                   </div>
 
-                  <div 
+                  <div
                     className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-2 ${isCustom ? 'border-primary bg-primary/5 ring-4 ring-primary/10' : 'border-foreground/10 bg-background/20 hover:border-primary/30'}`}
                     onClick={() => {
-                        setValue('isCustom', true);
+                      setValue('isCustom', true);
                     }}
                   >
                     <div className="font-bold flex items-center justify-between gap-4">
-                        <span className="text-sm md:text-base">{t('common.customMessage')}</span>
-                        <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${isCustom ? 'border-primary' : 'border-foreground/20'}`}>
-                            {isCustom && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                        </div>
+                      <span className="text-sm md:text-base">{t('common.customMessage')}</span>
+                      <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${isCustom ? 'border-primary' : 'border-foreground/20'}`}>
+                        {isCustom && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                      </div>
                     </div>
                     <p className="text-xs text-foreground/50 leading-relaxed">{t('create.customDesc')}</p>
                   </div>
 
-                  <div 
+                  <div
                     className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-2 md:col-span-2 ${!isCustom && !useSuggested ? 'border-primary bg-primary/5 ring-4 ring-primary/10' : 'border-foreground/10 bg-background/20 hover:border-primary/30'}`}
                     onClick={() => {
-                        setValue('isCustom', false);
-                        setValue('useSuggested', false);
+                      setValue('isCustom', false);
+                      setValue('useSuggested', false);
                     }}
                   >
                     <div className="font-bold flex items-center justify-between gap-4">
-                        <span className="text-sm md:text-base">{t('create.noMessage')}</span>
-                        <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${!isCustom && !useSuggested ? 'border-primary' : 'border-foreground/20'}`}>
-                            {!isCustom && !useSuggested && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                        </div>
+                      <span className="text-sm md:text-base">{t('create.noMessage')}</span>
+                      <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${!isCustom && !useSuggested ? 'border-primary' : 'border-foreground/20'}`}>
+                        {!isCustom && !useSuggested && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                      </div>
                     </div>
                     <p className="text-xs text-foreground/50 leading-relaxed">{t('create.noMessageDesc')}</p>
                   </div>
@@ -252,7 +272,12 @@ const CreateInvitationPage = () => {
                         {...register('messageEn')}
                       />
                     </div>
-                  </motion.div>
+                  {errors.messageAr && (
+                    <p className="text-xs text-red-500 flex items-center gap-1 text-start">
+                      <AlertCircle size={12} /> {t(errors.messageAr.message)}
+                    </p>
+                  )}
+                </motion.div>
                 )}
               </AnimatePresence>
 
@@ -307,7 +332,7 @@ const CreateInvitationPage = () => {
                 </button>
               </div>
 
-              <SurpriseActionButtons 
+              <SurpriseActionButtons
                 url={inviteUrl}
                 showCopy={false}
                 shareClasses="text-lg font-bold"
@@ -322,7 +347,7 @@ const CreateInvitationPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       <div className="mt-auto">
         <Footer isDark={true} />
       </div>

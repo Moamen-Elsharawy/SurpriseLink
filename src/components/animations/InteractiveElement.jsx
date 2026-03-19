@@ -58,15 +58,14 @@ export function InteractiveElement({ occasion, onReveal }) {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      {/* Dynamic Glow Effect */}
       <motion.div
-        className="absolute inset-0 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"
-        style={{ backgroundColor: config.color }}
+        className="absolute inset-0 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity"
+        style={{ backgroundColor: config.color, willChange: 'transform' }}
         animate={{
-          scale: [1, 1.2, 1],
+          scale: [1, 1.1, 1],
         }}
         transition={{
-          duration: 3,
+          duration: 4,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
@@ -74,38 +73,37 @@ export function InteractiveElement({ occasion, onReveal }) {
 
       {/* Main Glass Circle */}
       <motion.div
-        className="relative flex items-center justify-center w-44 h-44 md:w-56 md:h-56 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_0_40px_-12px_rgba(0,0,0,0.25)]"
+        className="relative flex items-center justify-center w-40 h-40 md:w-52 md:h-52 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-lg"
         animate={{
           scale: [1, 1.02, 1],
-          y: [0, -8, 0],
+          y: [0, -5, 0],
         }}
+        style={{ willChange: 'transform' }}
         transition={{
-          duration: 4,
+          duration: 5,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        style={{
-          boxShadow: `0 0 50px ${config.shadowColor}`,
-        }}
       >
         <Icon
-          className="w-16 h-16 md:w-20 md:h-20 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+          className="w-16 h-16 md:w-20 md:h-20 text-white drop-shadow-md"
           strokeWidth={1.5}
         />
 
         {/* Ambient Sparkles */}
-        {[...Array(6)].map((_, i) => (
+        {[...Array(4)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white rounded-full blur-[0.5px]"
             style={{
               top: '50%',
               left: '50%',
+              willChange: 'transform, opacity'
             }}
             animate={{
-              x: [0, Math.cos((i * Math.PI) / 3) * 120, 0],
-              y: [0, Math.sin((i * Math.PI) / 3) * 120, 0],
-              opacity: [0, 0.7, 0],
+              x: [0, Math.cos((i * Math.PI) / 2) * 100, 0],
+              y: [0, Math.sin((i * Math.PI) / 2) * 100, 0],
+              opacity: [0, 0.6, 0],
               scale: [0, 1, 0],
             }}
             transition={{

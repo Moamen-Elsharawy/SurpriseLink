@@ -3,13 +3,20 @@
 @theme {
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-switch: var(--switch-bg);
-  --color-glass: var(--glass-bg);
-  --color-glass-border: var(--glass-border);
-  --color-primary-50: #fce7f3;
-  --color-primary-100: #fbcfe8;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient 3s ease infinite;
 }
 
 :root, .light {
@@ -131,4 +138,34 @@ input:focus, textarea:focus, select:focus {
 /* Custom Checkbox Style */
 input[type="checkbox"].accent-primary {
   @apply bg-white/5 border-white/10 checked:bg-primary;
+}
+/* Phone Input Customization */
+.PhoneInput {
+  @apply flex items-center;
+}
+
+.PhoneInputInput {
+  @apply bg-transparent border-none outline-none flex-1 text-foreground px-4 h-full w-full;
+}
+
+.PhoneInputCountry {
+  @apply mr-3 flex items-center gap-1;
+}
+
+.PhoneInputCountrySelect {
+  @apply bg-background text-foreground border-none outline-none p-1 rounded-md text-xs;
+}
+
+.PhoneInputCountryIcon {
+  @apply w-6 h-auto rounded-sm shadow-sm;
+}
+
+/* RTL Support for Phone Input */
+[dir="rtl"] .PhoneInputCountry {
+  @apply mr-0 ml-3;
+}
+
+/* Fix Radix UI Padding Shift */
+body {
+  padding-right: 0 !important;
 }

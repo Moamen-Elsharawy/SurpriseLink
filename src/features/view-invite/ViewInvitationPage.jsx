@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Play, AlertCircle } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import { PhoneInputCustom } from '../../components/ui/PhoneInputCustom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '../../lib/supabase';
 import { viewerSchema } from '../../types/schemas';
@@ -63,7 +64,7 @@ const ViewInvitationPage = () => {
 
   const currentTheme = invitation ? (occasionThemes[invitation.occasion] || occasionThemes.general) : occasionThemes.general;
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors }, control } = useForm({
     resolver: zodResolver(viewerSchema),
     defaultValues: { name: '', phone: '' }
   });
@@ -78,7 +79,7 @@ const ViewInvitationPage = () => {
       .from('viewers')
       .select('*', { count: 'exact', head: true })
       .eq('invitation_id', id);
-    
+
     if (!error) setVisitorCount(count);
   };
 
@@ -139,17 +140,17 @@ const ViewInvitationPage = () => {
   );
 
   // Determine final message
-  const displayMessage = (i18n.language === 'ar' 
-    ? (invitation.message_ar || randomMsg?.ar) 
+  const displayMessage = (i18n.language === 'ar'
+    ? (invitation.message_ar || randomMsg?.ar)
     : (invitation.message_en || randomMsg?.en)) || '';
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-0 transition-colors duration-1000 overflow-y-auto"
       style={{ background: currentTheme.gradient }}
       dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
     >
-      <SEO 
+      <SEO
         title={invitation ? `${invitation.sender_name} - ${t(`occasions.${invitation.occasion}`)}` : t('view.welcome')}
         description={displayMessage}
         occasion={invitation?.occasion}
@@ -157,7 +158,7 @@ const ViewInvitationPage = () => {
       <div className="relative z-10 max-w-4xl mx-auto min-h-screen flex flex-col items-center px-4 pt-24 pb-0">
         <OccasionDecoration occasion={invitation?.occasion} />
         <FloatingParticles count={30} color={currentTheme.primaryColor} />
-        
+
         <div className="flex-1 flex flex-col items-center justify-center w-full">
           <AnimatePresence mode="wait">
             {!isStarted ? (
@@ -166,53 +167,58 @@ const ViewInvitationPage = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                className="glass-card w-full max-w-md space-y-6 md:space-y-8 text-center relative z-10"
+                className="bg-background/20 backdrop-blur-3xl border border-white/10 rounded-3xl md:rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden flex flex-col w-full max-w-lg p-6 md:p-10 text-center"
               >
-                <div className="space-y-2">
+                <div className="space-y-2 mb-8">
                   <h1 className={`${currentTheme.textColor} text-3xl font-black tracking-tight`}>
                     {t('view.welcome')}
                   </h1>
                   <p className={`${currentTheme.textColor === 'text-white' ? 'text-white/60' : 'text-slate-600'}`}>{t('view.enterDetails')}</p>
                 </div>
-                
+
                 <form onSubmit={handleSubmit(onStart)} className="space-y-6 text-start">
                   {visitorCount > 0 && (
-                    <div className={`text-center text-sm font-medium ${currentTheme.textColor === 'text-white' ? 'text-white/40' : 'text-slate-400'} mb-2`}>
+                    <div className={`text-center text-sm font-medium ${currentTheme.textColor === 'text-white' ? 'text-white/40' : 'text-slate-400'} mb-6`}>
                       {visitorCount}{' '}
-                      {i18n.language === 'ar' 
+                      {i18n.language === 'ar'
                         ? (visitorCount >= 3 && visitorCount <= 10 ? t('view.alreadySeenPlural') : t('view.alreadySeen'))
                         : (visitorCount === 1 ? t('view.alreadySeen') : t('view.alreadySeenPlural'))}
                     </div>
                   )}
-                  
+
                   <div className="space-y-2">
-                    <Label htmlFor="name" className={`font-semibold ${currentTheme.textColor === 'text-white' ? 'text-white/80' : 'text-slate-700'}`}>{t('view.viewerName')}</Label>
+                    <Label htmlFor="name" className="font-semibold">{t('view.viewerName')}</Label>
                     <Input
                       id="name"
                       placeholder={t('view.namePlaceholder')}
                       {...register('name')}
-                      className={`bg-white/10 backdrop-blur-md border-white/20 ${currentTheme.textColor === 'text-white' ? 'text-white placeholder:text-white/30' : 'text-slate-900 placeholder:text-slate-400'} ${errors.name ? 'border-red-500/50' : ''}`}
+                      className={errors.name ? 'border-red-500/50' : ''}
                     />
                     {errors.name && (
-                      <p className="text-xs text-red-400 flex items-center gap-1 font-medium">
-                        <AlertCircle size={12} /> {errors.name.message}
+                      <p className="text-xs text-red-500 flex items-center gap-1 font-medium text-start">
+                        <AlertCircle size={12} /> {t(errors.name.message)}
                       </p>
                     )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone" className={`font-semibold ${currentTheme.textColor === 'text-white' ? 'text-white/80' : 'text-slate-700'}`}>{t('view.viewerPhone')}</Label>
-                    <Input
-                      id="phone"
-                      placeholder={t('view.phonePlaceholder')}
-                      type="tel"
-                      dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
-                      {...register('phone')}
-                      className={`bg-white/10 backdrop-blur-md border-white/20 ${currentTheme.textColor === 'text-white' ? 'text-white placeholder:text-white/30' : 'text-slate-900 placeholder:text-slate-400'} ${errors.phone ? 'border-red-500/50' : ''}`}
+                    <Label htmlFor="phone" className="font-semibold">{t('view.viewerPhone')}</Label>
+                    <Controller
+                      name="phone"
+                      control={control}
+                      render={({ field }) => (
+                        <PhoneInputCustom
+                          {...field}
+                          placeholder={t('view.phonePlaceholder')}
+                          defaultCountry="EG"
+                          international
+                          error={errors.phone}
+                        />
+                      )}
                     />
                     {errors.phone && (
-                      <p className="text-xs text-red-400 flex items-center gap-1 font-medium">
-                        <AlertCircle size={12} /> {errors.phone.message}
+                      <p className="text-xs text-red-500 flex items-center gap-1 font-medium text-start">
+                        <AlertCircle size={12} /> {t(errors.phone.message)}
                       </p>
                     )}
                   </div>
@@ -232,8 +238,8 @@ const ViewInvitationPage = () => {
                 animate={{ opacity: 1 }}
                 className="w-full relative z-10"
               >
-                <ThemeLoader 
-                  occasion={invitation.occasion} 
+                <ThemeLoader
+                  occasion={invitation.occasion}
                   message={displayMessage}
                   senderName={invitation.sender_name}
                 />

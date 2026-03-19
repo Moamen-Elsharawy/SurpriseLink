@@ -1,12 +1,12 @@
 import { z } from "zod";
+import { isValidPhoneNumber } from "react-phone-number-input";
 
 export const invitationSchema = z.object({
-  senderName: z.string().min(2, "Name must be at least 2 characters").max(50),
-  senderPhone: z.string()
-    .min(10, "Phone number must be at least 10 digits")
-    .max(15, "Phone number is too long")
-    .regex(/^\+?[0-9]*$/, "Phone number can only contain digits and a leading +"),
-  occasion: z.string().min(1, "Please select an occasion"),
+  senderName: z.string().min(2, "errors.nameRequired").max(50),
+  senderPhone: z.string().refine(isValidPhoneNumber, {
+    message: "errors.phoneInvalid",
+  }),
+  occasion: z.string().min(1, "errors.occasionRequired"),
   isCustom: z.boolean().default(false),
   useSuggested: z.boolean().default(true),
   messageAr: z.string().optional(),
@@ -17,14 +17,13 @@ export const invitationSchema = z.object({
   }
   return true;
 }, {
-  message: "Both Arabic and English messages are required",
+  message: "errors.messagesRequired",
   path: ["messageAr"]
 });
 
 export const viewerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(50),
-  phone: z.string()
-    .min(10, "Phone number must be at least 10 digits")
-    .max(15, "Phone number is too long")
-    .regex(/^\+?[0-9]*$/, "Phone number can only contain digits and a leading +")
+  name: z.string().min(2, "errors.nameRequired").max(50),
+  phone: z.string().refine(isValidPhoneNumber, {
+    message: "errors.phoneInvalid",
+  })
 });

@@ -14,7 +14,8 @@
     "copied": "Copied!",
     "tryItNow": "Try it Now",
     "ar": "العربية",
-    "en": "English"
+    "en": "English",
+    "senderNameHint": "This name is what the recipient will see"
   },
   "create": {
     "title": "Create a Surprise Link",
@@ -65,5 +66,11 @@
     "valentine": "Valentine's Day",
     "women_day": "Women's Day",
     "teacher_day": "Teacher's Day"
+  },
+  "errors": {
+    "nameRequired": "Please enter a valid name (at least 2 characters)",
+    "phoneInvalid": "Invalid phone number",
+    "occasionRequired": "Please select an occasion",
+    "messagesRequired": "Both Arabic and English messages are required"
   }
 }

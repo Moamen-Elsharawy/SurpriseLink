@@ -13,24 +13,24 @@ export default function AmbientBackground() {
 
       {/* Animated Blobs */}
       <motion.div
-        style={{ y: y1 }}
+        style={{ y: y1, willChange: "transform" }}
         animate={{
-          scale: [1, 1.2, 1],
-          rotate: [0, 90, 0],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] rounded-full bg-primary/20 blur-[120px]"
-      />
-      <motion.div
-        style={{ y: y2 }}
-        animate={{
-          scale: [1.2, 1, 1.2],
-          rotate: [0, -90, 0],
+          scale: [1, 1.1, 1],
+          rotate: [0, 45, 0],
           opacity: [0.2, 0.4, 0.2],
         }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[40%] -right-[10%] w-[50%] h-[50%] rounded-full bg-secondary/20 blur-[100px]"
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] rounded-full bg-primary/20 blur-[80px]"
+      />
+      <motion.div
+        style={{ y: y2, willChange: "transform" }}
+        animate={{
+          scale: [1.1, 1, 1.1],
+          rotate: [0, -45, 0],
+          opacity: [0.15, 0.3, 0.15],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute top-[40%] -right-[10%] w-[50%] h-[50%] rounded-full bg-secondary/15 blur-[60px]"
       />
 
       {/* Floating Sparkles */}
@@ -38,10 +38,11 @@ export default function AmbientBackground() {
         <motion.div
           key={i}
           className="absolute w-1 h-1 bg-white rounded-full"
-          initial={{ 
+          style={{ 
             x: Math.random() * 100 + "%", 
             y: Math.random() * 100 + "%",
-            opacity: Math.random() * 0.5
+            opacity: Math.random() * 0.5,
+            willChange: "transform, opacity"
           }}
           animate={{
             y: [0, -100, 0],

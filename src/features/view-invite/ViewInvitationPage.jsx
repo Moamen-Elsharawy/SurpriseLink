@@ -14,6 +14,7 @@ import ThemeLoader from '../themes/ThemeLoader';
 import { FloatingParticles } from '../../components/animations/FloatingParticles';
 import { OccasionDecoration } from '../../components/animations/OccasionDecoration';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/shared/SEO';
 
 import messages from '../../lib/messages.json';
 
@@ -148,7 +149,12 @@ const ViewInvitationPage = () => {
       style={{ background: currentTheme.gradient }}
       dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
     >
-      <div className="relative z-10 max-w-4xl mx-auto min-h-screen flex flex-col items-center px-4 pt-10 md:pt-20 pb-0">
+      <SEO 
+        title={invitation ? `${invitation.sender_name} - ${t(`occasions.${invitation.occasion}`)}` : t('view.welcome')}
+        description={displayMessage}
+        occasion={invitation?.occasion}
+      />
+      <div className="relative z-10 max-w-4xl mx-auto min-h-screen flex flex-col items-center px-4 pt-24 pb-0">
         <OccasionDecoration occasion={invitation?.occasion} />
         <FloatingParticles count={30} color={currentTheme.primaryColor} />
         

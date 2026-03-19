@@ -16,6 +16,7 @@ import { Switch } from '../../components/ui/Switch';
 import Footer from '../../components/layout/Footer';
 import { WhatsAppIcon } from '../../components/ui/WhatsAppIcon';
 import SurpriseActionButtons from '../../components/layout/SurpriseActionButtons';
+import SEO from '../../components/shared/SEO';
 
 const occasions = [
   'ramadan', 'eid_fitr', 'eid_adha', 'mawlid', 'islamic_new_year',
@@ -94,6 +95,10 @@ const CreateInvitationPage = () => {
 
   return (
     <div className={`min-h-full flex-1 flex flex-col ${success ? 'max-w-5xl' : 'max-w-3xl'} md:mx-auto py-4 md:py-8 px-0 md:px-4 transition-all duration-500`}>
+      <SEO 
+        title={t('create.title')} 
+        description={t('create.subtitle')}
+      />
       <AnimatePresence mode="wait">
         {!success ? (
           <motion.div

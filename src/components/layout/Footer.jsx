@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heart } from 'lucide-react';
+import { Heart, Facebook, Instagram, Twitter } from 'lucide-react';
 
 const Footer = ({ isDark = true }) => {
   const { t, i18n } = useTranslation();
@@ -16,8 +16,20 @@ const Footer = ({ isDark = true }) => {
           </span>
         </p>
         <p className="text-[10px] uppercase tracking-[0.2em] font-light opacity-60">
-          © {new Date().getFullYear()} Occasion Surprise
+          © {new Date().getFullYear()} SurpriseLink
         </p>
+
+        <div className="flex items-center gap-5 mt-3 opacity-50 hover:opacity-100 transition-opacity duration-300">
+          <a href="https://www.facebook.com/Moamen.Elsharawy2004" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">
+            <Facebook size={18} />
+          </a>
+          <a href="https://www.instagram.com/moamen_elsharawy2004/" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition-colors">
+            <Instagram size={18} />
+          </a>
+          <a href="https://x.com/MoamenElsharawy" target="_blank" rel="noopener noreferrer" className="hover:text-sky-400 transition-colors">
+            <Twitter size={18} />
+          </a>
+        </div>
       </div>
     </footer>
   );

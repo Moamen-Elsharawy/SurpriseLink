@@ -11,13 +11,13 @@ function App() {
     <ThemeProvider>
       <SoundProvider>
         <Router>
-        <Layout>
-        <Routes>
-          <Route path="/" element={<CreateInvitationPage />} />
-          <Route path="/invite/:id" element={<ViewInvitationPage />} />
-        </Routes>
-      </Layout>
-    </Router>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<CreateInvitationPage />} />
+              <Route path="/invite/:id" element={<ViewInvitationPage />} />
+            </Routes>
+          </Layout>
+        </Router>
       </SoundProvider>
     </ThemeProvider>
   );

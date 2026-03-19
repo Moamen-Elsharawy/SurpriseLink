@@ -15,6 +15,7 @@ import { Label } from '../../components/ui/label';
 import { Switch } from '../../components/ui/Switch';
 import Footer from '../../components/layout/Footer';
 import { WhatsAppIcon } from '../../components/ui/WhatsAppIcon';
+import SurpriseActionButtons from '../../components/layout/SurpriseActionButtons';
 
 const occasions = [
   'ramadan', 'eid_fitr', 'eid_adha', 'mawlid', 'islamic_new_year',
@@ -91,13 +92,8 @@ const CreateInvitationPage = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const shareOnWhatsApp = () => {
-    const text = `Check out this surprise! ${inviteUrl}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-  };
-
   return (
-    <div className="min-h-full flex-1 flex flex-col max-w-2xl mx-auto py-12 px-4">
+    <div className={`min-h-full flex-1 flex flex-col ${success ? 'max-w-5xl' : 'max-w-3xl'} md:mx-auto py-4 md:py-8 px-0 md:px-4 transition-all duration-500`}>
       <AnimatePresence mode="wait">
         {!success ? (
           <motion.div
@@ -105,7 +101,7 @@ const CreateInvitationPage = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="glass-card space-y-8"
+            className="glass-card space-y-6 md:space-y-8"
           >
               <div className="text-center space-y-2">
                 <h1 className="text-4xl font-black text-foreground drop-shadow-sm">
@@ -270,17 +266,17 @@ const CreateInvitationPage = () => {
             key="success"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="glass-card text-center space-y-8"
+            className="glass-card text-center space-y-4 md:space-y-5 md:p-6"
           >
-            <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto text-green-500">
+            <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto text-green-500 shadow-md shadow-green-500/10">
               <Check size={40} />
             </div>
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold">{t('create.success')}</h2>
-              <p className="text-white/60">{t('create.linkReady')}</p>
+            <div className="space-y-1">
+              <h2 className="text-3xl md:text-4xl font-black text-foreground drop-shadow-sm">{t('create.success')}</h2>
+              <p className="text-foreground/60 text-base">{t('create.linkReady')}</p>
             </div>
 
-            <div className="p-4 bg-white rounded-3xl inline-block mx-auto">
+            <div className="p-4 bg-white rounded-[1.5rem] inline-block mx-auto shadow-md ring-4 ring-white/5">
               <QRCodeSVG value={inviteUrl} size={180} />
             </div>
 
@@ -306,25 +302,17 @@ const CreateInvitationPage = () => {
                 </button>
               </div>
 
-              <div className="flex flex-col gap-3">
-                <Button 
-                  className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white flex gap-2 justify-center items-center py-6 text-lg font-bold shadow-lg shadow-green-500/20" 
-                  onClick={shareOnWhatsApp}
-                >
-                  <WhatsAppIcon size={22} />
-                  {t('common.share')}
-                </Button>
-                <div className="grid grid-cols-2 gap-3">
+              <SurpriseActionButtons 
+                url={inviteUrl}
+                showCopy={false}
+                shareClasses="text-lg font-bold"
+                extraAction={
                   <Button variant="outline" size="lg" className="flex gap-2 justify-center items-center border-foreground/10" onClick={() => window.open(inviteUrl, '_blank')}>
                     <Send size={18} />
                     {t('common.tryItNow')}
                   </Button>
-                  <Button variant="gradient" size="lg" onClick={() => window.location.reload()} className="flex gap-2 justify-center items-center">
-                    <Sparkles size={18} />
-                    {t('common.createOwn')}
-                  </Button>
-                </div>
-              </div>
+                }
+              />
             </div>
           </motion.div>
         )}

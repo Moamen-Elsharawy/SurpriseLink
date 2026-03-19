@@ -59,7 +59,7 @@ body {
   background: var(--card-bg);
   backdrop-filter: blur(30px);
   border: 1px solid var(--glass-border);
-  @apply rounded-[2.5rem] p-10 shadow-2xl transition-all duration-500;
+  @apply rounded-[2.5rem] p-6 md:p-10 shadow-2xl transition-all duration-500;
 }
 
 /* Premium Dynamic Background - Inspired by the Image */

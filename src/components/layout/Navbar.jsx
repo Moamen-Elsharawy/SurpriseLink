@@ -9,10 +9,12 @@ const Navbar = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // Sync initial direction on mount
-    document.documentElement.dir = i18n.language.startsWith('ar') ? 'rtl' : 'ltr';
-    document.documentElement.lang = i18n.language.split('-')[0];
-  }, []);
+    if (!i18n.resolvedLanguage) return;
+    const root = document.documentElement;
+    const isAr = i18n.resolvedLanguage.startsWith('ar');
+    root.dir = isAr ? 'rtl' : 'ltr';
+    root.lang = i18n.resolvedLanguage;
+  }, [i18n.resolvedLanguage]);
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl px-6 py-3 flex justify-between items-center glass rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border-white/20 transition-all duration-300">

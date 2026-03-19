@@ -4,22 +4,22 @@ import { Globe } from 'lucide-react';
 
 const LanguageToggle = () => {
   const { i18n } = useTranslation();
+  const isAr = i18n.resolvedLanguage?.startsWith('ar');
 
   const toggleLanguage = () => {
-    const nextLang = i18n.language === 'en' ? 'ar' : 'en';
+    const nextLang = isAr ? 'en' : 'ar';
     i18n.changeLanguage(nextLang);
-    document.documentElement.dir = nextLang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = nextLang;
   };
 
   return (
     <button
       onClick={toggleLanguage}
-      className="flex items-center gap-2 px-4 py-2 rounded-full glass hover:bg-white/10 transition-all duration-300"
+      className="flex items-center gap-2 px-3 py-2 rounded-xl glass hover:bg-white/10 transition-all duration-300 text-foreground/80 hover:text-foreground"
+      title={isAr ? 'Switch to English' : 'التغيير للعربية'}
     >
       <Globe size={18} />
-      <span className="text-sm font-medium">
-        {i18n.language === 'en' ? 'العربية' : 'English'}
+      <span className="text-sm font-bold min-w-[3rem]">
+        {isAr ? 'English' : 'العربية'}
       </span>
     </button>
   );

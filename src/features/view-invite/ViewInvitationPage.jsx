@@ -148,7 +148,7 @@ const ViewInvitationPage = () => {
       style={{ background: currentTheme.gradient }}
       dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
     >
-      <div className="relative z-10 max-w-4xl mx-auto min-h-screen flex flex-col items-center px-4 pt-20 pb-0">
+      <div className="relative z-10 max-w-4xl mx-auto min-h-screen flex flex-col items-center px-4 pt-10 md:pt-20 pb-0">
         <OccasionDecoration occasion={invitation?.occasion} />
         <FloatingParticles count={30} color={currentTheme.primaryColor} />
         
@@ -160,7 +160,7 @@ const ViewInvitationPage = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                className="glass-card w-full max-w-md space-y-8 text-center relative z-10"
+                className="glass-card w-full max-w-md space-y-6 md:space-y-8 text-center relative z-10"
               >
                 <div className="space-y-2">
                   <h1 className={`${currentTheme.textColor} text-3xl font-black tracking-tight`}>

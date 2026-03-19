@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
       <AmbientBackground />
       <Navbar />
       
-      <main className="flex-1 pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto relative z-10 w-full flex flex-col">
+      <main className="flex-1 pt-24 pb-6 md:pb-12 px-2 md:px-4 max-w-7xl mx-auto relative z-10 w-full flex flex-col">
         {children}
       </main>
 
